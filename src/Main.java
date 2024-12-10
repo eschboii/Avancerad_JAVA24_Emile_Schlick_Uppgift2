@@ -1,7 +1,13 @@
 import studenthanteringssystem.Filhantering;
+import studenthanteringssystem.Konsolgranssnitt;
 
 public class Main {
     public static void main(String[] args) {
-            new Filhantering();
+        Filhantering filhantering = Filhantering.getInstance();
+        filhantering.skapaFil();
+
+        Konsolgranssnitt konsolgranssnitt = Konsolgranssnitt.getInstance();
+        konsolgranssnitt.viLoggarStudenter();
+        konsolgranssnitt.closeScanner();
     }
 }
