@@ -5,10 +5,12 @@ import java.io.File;
 import java.util.LinkedHashMap;
 
 public class Filhantering {
-
+    // Vi strukturear efter Singeltonmetoden
+    // Vi skapar en string med filsökvägen för att garantera att det blir rätt varje gång vi refererar
     private static Filhantering instance;
     private final String filSokvag = "Studenter.txt";
 
+    // Konstruktorn skapar fil så fort vi anropar på klassen Filhantering
     private Filhantering(){
         skapaFil();
     }
@@ -20,9 +22,13 @@ public class Filhantering {
         return instance;
     }
 
+    // Vi försöker skapa en fil "Studenter.txt"
     public void skapaFil() {
         try {
+            // Vi skapar ett objekt "File" som representerar vår fil
             File studenter = new File(filSokvag);
+
+            // Vi kontrollerar om filen redan finns på platsen, om inte så som matar vi ut att vi skapar filen
             if (!studenter.exists()) {
                 if (studenter.createNewFile()) {
                     System.out.println("Fil skapad: " + studenter.getName());
@@ -36,16 +42,25 @@ public class Filhantering {
                 System.out.println();
             }
 
+            // Sker oväntade fel så har vi en catch som tar emot det och matar ut text som beskriver att något blivit
+            // fel
         } catch (IOException e) {
             System.out.println("Ett fel uppstod vid skapandet av fil.");
             e.printStackTrace();
         }
     }
 
+    // Denna metoden sparar studenterna vi har i vår LinkedHashmap till vår fil
     public void sparaStudenterTillFil(LinkedHashMap<Integer, Student> studentMap) {
+        // Vi försöker att öppna filen på rätt filsökväg och använder bool för att beskriva att vi skriver över filen
+        // om filen redan finns.
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filSokvag, false))) {
+            // Vi iterar genom vår hashmap och sparar dem i filen med ett komma som separerar de olika posterna
+
             for (Student student : studentMap.values()) {
                 writer.write(student.getID() + "," + student.getNamn() + "," + student.getBetyg());
+                // Säger att skrivaren går över till nästa rad
                 writer.newLine();
             }
 
@@ -60,15 +75,22 @@ public class Filhantering {
         }
     }
 
+    // Vi skapar en tom LinkedHashmap som kommer att spara alla studenter som läses från filen
     public LinkedHashMap<Integer, Student> lasStudenterFranFil() {
         LinkedHashMap<Integer, Student> studentMap = new LinkedHashMap<>();
 
+        // Vi öppnar filen och löser den med hjälp av "BufferedReader"
         try (BufferedReader reader = new BufferedReader(new FileReader(filSokvag))) {
             String rad;
 
+            // Vår string "rad" sparar varje rad av text där vår while går genom dokumentet rad för rad och fortsätter
+            // tills vi har en tom rad
             while ((rad = reader.readLine()) != null) {
+
+                // Varje rad antas vara uppdelat med ett komma
                 String[] data = rad.split(",");
 
+                // Kontrollerar att raderna är korrekt formaterade med våra tre värden, ID, namn och betyg
                 if (data.length == 3) {
                     int id = Integer.parseInt(data[0]);
                     String namn = data[1];
@@ -81,6 +103,7 @@ public class Filhantering {
             System.out.println("Studenter lästa från fil.");
             System.out.println();
 
+            // Vi fångar olika problem, t.ex att vi inte hittar filen och att vi inte kan läsa från filen
         } catch (FileNotFoundException e) {
             System.out.println("Filen kunde inte hittas.");
             System.out.println();
@@ -92,11 +115,13 @@ public class Filhantering {
             e.printStackTrace();
         }
 
+        // Vi returnerar hashmapen med alla studenter
         return studentMap;
     }
 
+    // Metod som raderar filen
     public void raderaFil() {
-        File studenter = new File("Studenter.txt");
+        File studenter = new File(filSokvag);
 
         if (studenter.delete()) {
             System.out.println("Raderar fil: " + studenter.getName());

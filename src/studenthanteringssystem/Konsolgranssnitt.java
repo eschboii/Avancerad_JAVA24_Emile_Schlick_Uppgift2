@@ -8,19 +8,23 @@ public class Konsolgranssnitt {
     private boolean studentLoggning;
     private int val;
 
+    // Vi skapar instans av Regex som vi använder för att garantera att användaren använder sig av rätt bokstäver/siffror
     public String bokstaver = "^[a-zA-ZåäöÅÄÖ]+$";
     public String siffror = "^[0-9]+$";
 
+    // Vi skapar objekt av våra klasser, vi använder getInstance() då vi skapat dem enligt Singelton-strukturen
     private final StudentHantering studentHantering = StudentHantering.getInstance();
     private final Filhantering filhantering = Filhantering.getInstance();
 
     private final Scanner scan = new Scanner(System.in);
 
     private Konsolgranssnitt() {
+        // Vi anropar våra startmetoder i konstruktorn
         setStudentLoggning(true);
         viLoggarStudenter();
     }
 
+    // Vi skapar klassen enligt Singelton-strukturen
     public static Konsolgranssnitt getInstance() {
         if (instance == null) {
             instance = new Konsolgranssnitt();
@@ -28,6 +32,7 @@ public class Konsolgranssnitt {
         return instance;
     }
 
+    // Startmenyn som anropar två metoder
     public void viLoggarStudenter() {
         while (isStudentLoggning()) {
             System.out.println("Hej, välkommen till Emiles lilla skola!");
@@ -45,6 +50,7 @@ public class Konsolgranssnitt {
         }
     }
 
+    // Metod med switch-case som anropar metoder beroende på inmatat tal
     private void inmatningsAlternativ() {
         switch (getVal()) {
             case 1:
@@ -71,6 +77,8 @@ public class Konsolgranssnitt {
         }
     }
 
+    // Metod som promptar användaren att skriva in studentens namn, betyg och ID-nummer. Vi har även lite kontroller som
+    // ser till att rätt bokstäver/siffror används på rätt plats och att första bokstaven börjar med stor bokstav
     private void laggTillStudentUI() {
         boolean laggTillFlerStudenter = true;
 
@@ -113,23 +121,25 @@ public class Konsolgranssnitt {
 
                 int student_ID = Integer.parseInt(idInput);
 
+                // Vi använder oss av "laggTillStudent" från klassen "StudentHantering"
                 studentHantering.laggTillStudent(namn, betyg, student_ID);
                 System.out.println("Student tillagd.");
 
-                boolean validChoice = false;
-                while (!validChoice) {
+                boolean godkantVal = false;
+
+                while (!godkantVal) {
                     System.out.println("Vill du lägga till fler studenter?");
                     System.out.println("1. Ja");
                     System.out.println("2. Nej");
 
                     scanningInt();
-                    int choice = getVal();
+                    int val1 = getVal();
 
-                    if (choice == 1) {
-                        validChoice = true;
+                    if (val1 == 1) {
+                        godkantVal = true;
 
-                    } else if (choice == 2) {
-                        validChoice = true;
+                    } else if (val1 == 2) {
+                        godkantVal = true;
                         laggTillFlerStudenter = false;
 
                     } else {
@@ -144,11 +154,15 @@ public class Konsolgranssnitt {
         }
     }
 
+    // Metod som låter oss söka efter en student genom att mata in studentens ID-nummer
     private void sokStudentUI() {
         System.out.println("Ange studentens ID för att söka:");
+
         int studentID = scan.nextInt();
         scan.nextLine();
 
+        // Vi skapar en Studentvariabel som heter student och tilldelar den Studentobjektet som returneras av
+        // sokStudentID(studentID). Hittas en student med ID:et tilldelas det till studentvariabeln
         Student student = studentHantering.sokStudentID(studentID);
         if (student != null) {
             System.out.println("Student: " + student);
@@ -158,6 +172,7 @@ public class Konsolgranssnitt {
         System.out.println();
     }
 
+    // Metod som visar sparade studenter i vår StudentHanteringsklass "getSparadeStudenter()"
     private void visaSparadeStudenter() {
         LinkedHashMap<Integer, Student> students = studentHantering.getSparadeStudenter();
 
@@ -172,18 +187,22 @@ public class Konsolgranssnitt {
         System.out.println();
     }
 
+    // Metod som sparar studenter till en text-fil genom att anropa metoden "sparaStudenterTillFil()" i klassen
+    // Filhantering. Vi får studenterna genom att skicka in metoden getSparadeStudenter() från klassen StudentHantering
     private void sparaStudenterTillFil() {
         System.out.println("Sparar studenter till fil...");
         filhantering.sparaStudenterTillFil(studentHantering.getSparadeStudenter());
     }
 
+    // Metoden skapar en LinkedHashMap dit vi sparar de sparade studenterna från filen, sedan går vi genom hashmapen
+    // med en enhanced for-loop och skriver ut alla sparade studenter
     private void visaStudenterFranFil() {
         System.out.println("Läser in studenter från fil...");
-        LinkedHashMap<Integer, Student> loadedStudents = filhantering.lasStudenterFranFil();
+        LinkedHashMap<Integer, Student> sparadeStudenter = filhantering.lasStudenterFranFil();
 
-        if (loadedStudents != null && !loadedStudents.isEmpty()) {
+        if (sparadeStudenter != null && !sparadeStudenter.isEmpty()) {
             System.out.println("Studenter från fil:");
-            for (Student student : loadedStudents.values()) {
+            for (Student student : sparadeStudenter.values()) {
                 System.out.println(student);
             }
         } else {
@@ -191,6 +210,8 @@ public class Konsolgranssnitt {
         }
     }
 
+    // Metod som läser in inmatad siffra och ansätter "val" i metod. Metoden ser också till att endast siffror kan
+    // kan matas in
     private void scanningInt (){
         while (true) {
             if (scan.hasNextInt()) {
@@ -206,28 +227,34 @@ public class Konsolgranssnitt {
         }
     }
 
+    // Metod som avslutar programmet och som tar bort studenttextfilen
     private void avslutaProgram() {
         filhantering.raderaFil();
         System.out.println("Avslutar programmet, ha en trevlig dag!");
         setStudentLoggning(false);
     }
 
+    // Metod som stänger av scanner
     public void closeScanner() {
         scan.close();
     }
 
+    // Metod som returnerar siffran sparad i "val"
     public int getVal() {
         return val;
     }
 
+    // Metod som spara siffra till "val"
     public void setVal(int val) {
         this.val = val;
     }
 
+    // Metod som sätter värdet true/false till vår boolean studentLoggning
     private void setStudentLoggning(boolean studentLoggning) {
         this.studentLoggning = studentLoggning;
     }
 
+    // Metod som returnerar om studentLoggning är true eller false
     public boolean isStudentLoggning() {
         return studentLoggning;
     }
