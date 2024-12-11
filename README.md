@@ -1,7 +1,7 @@
-# Emiles virtuella fordonsuthyrning
-
+# Emiles lilla skola, studenthanteringssystem
 Detta är ett konsolbaserat system för att hantera studentuppgifter byggt i Java.
 Programmet låter användaren skapa, visa och spara studentdata i fil. Programmet låter även användaren läsa studentinformation från sparad fil. Programmet använder sig av objektorienterad programmering för att organisera och hantera studentdata.
+
 ---
 
 ## Funktioner
@@ -89,6 +89,7 @@ Var vänlig välj ett av alternativen
 5. Läs sparade studenter från fil
 6. Avsluta programmet
 ```
+
 ### 3. Lägg till en student
 Välj **Alternativ 1** för att lägga till en student. Programmet ber om namn, betyg och ID för studenten och sparar sedan informationen.
 ```
@@ -98,6 +99,7 @@ Ange studentens ID: 1337
 
 Studenten John Doe med ID 1337 och betyg A har lagts till.
 ```
+
 ### 4. Sök student efter ID
 Användaren kan välja **Alternativ 2** för att söka efter en student genom deras ID.
 ```
@@ -106,6 +108,7 @@ Student hittad:
 
 ID: 1337, Namn: Emile, Betyg: A
 ```
+
 ### 5. Visa sparade studenter
 Genom att välja **Alternativ 3** för att visa alla sparade studenter och matar ut en lista på alla studenter som har lagts till.
 ```
@@ -114,11 +117,13 @@ Sparade studenter:
 ID: 1337, Namn: Emile, Betyg: A
 ID: 420, Namn: Oliver, Betyg: F
 ```
+
 ### 6. Visa sparade studenter
 Vi kan spara studenter till fil med **Alternativ 4** för att spara våra inmatade studenter i en fil.
 ```
 Studenter har sparats till filen "Student.txt".
 ```
+
 ### 7. Visa sparade studenter
 Vi kan läsa de sparade studenterna från filen med **Alternativ 5**.
 ```
@@ -127,6 +132,7 @@ Studenter har lästs in från filen:
 ID: 1337, Namn: Emile, Betyg: A
 ID: 420, Namn: Oliver, Betyg: F
 ```
+
 ### 8. Avsluta programmet
 Med **Alternativ 8** i huvudmenyn så avslutas programmet samt att textfilen med de sparade studenterna tas bort.
 
